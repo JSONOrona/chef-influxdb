@@ -61,6 +61,13 @@ package 'influxdb' do
   version node['influxdb']['version']
 end
 
+# influxdb_config resource will fail without this
+directory '/etc/opt/influxdb/' do
+  owner 'influxdb'
+  group 'influxdb'
+  mode '0755'
+end
+
 influxdb_config node['influxdb']['config_file_path'] do
   config node['influxdb']['config']
 end
