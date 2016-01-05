@@ -4,39 +4,21 @@ driver:
 
 provisioner:
   name: chef_zero
+  require_chef_omnibus: 12.4.1
 
 platforms:
-<% %w(12.5 12.4 12.3 12.2 12.1).each do |chef_version| %>
-  - name: ubuntu-14.04-chef<%= chef_version %>
-    driver:
-      box: bento/ubuntu-14.04
-    provisioner:
-      require_chef_omnibus: <%= chef_version %>
-  - name: ubuntu-15.04-chef<%= chef_version %>
-    driver:
-      box: bento/ubuntu-15.04
-    provisioner:
-      require_chef_omnibus: <%= chef_version %>
-  - name: debian-8.2-chef<%= chef_version %>
-    driver:
-      box: bento/debian-8.2
-    provisioner:
-      require_chef_omnibus: <%= chef_version %>
-  - name: centos-6.7-chef<%= chef_version %>
-    driver:
-      box: bento/centos-6.7
-    provisioner:
-      require_chef_omnibus: <%= chef_version %>
-  - name: centos-7.1-chef<%= chef_version %>
-    driver:
-      box: bento/centos-7.1
-    provisioner:
-      require_chef_omnibus: <%= chef_version %>
-<% end %>
+  - name: centos-6.6
 
 suites:
   - name: default
+    driver_config:
+      customize:
+        memory: 1024
+      network:
+        - ["private_network", {ip: "192.168.33.35"}]
     run_list:
       - recipe[influxdb::default]
       - recipe[influxdb-test::default]
+    # Uncomment below if testing data bags needed
+    # data_bags_path: test/integration/data_bags
     attributes:
